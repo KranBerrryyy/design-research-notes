@@ -1,0 +1,539 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Design Research — Lecture Notes</title>
+<style>
+  :root{
+    --bg:#f5f6f8;
+    --surface:#ffffff;
+    --surface-2:#f8f9fb;
+    --text:#20242a;
+    --muted:#68707b;
+    --line:#e3e6ea;
+    --accent:#287f92;
+    --accent-soft:#e7f3f5;
+    --dark:#27313a;
+    --shadow:0 8px 28px rgba(25,35,45,.06);
+    --radius:16px;
+  }
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{
+    margin:0;
+    background:var(--bg);
+    color:var(--text);
+    font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+    line-height:1.7;
+  }
+  .layout{display:grid;grid-template-columns:260px minmax(0,1fr);min-height:100vh}
+  aside{
+    position:sticky;top:0;height:100vh;overflow:auto;
+    background:#fbfbfc;border-right:1px solid var(--line);
+    padding:28px 18px;
+  }
+  .brand{padding:4px 10px 24px}
+  .brand small{color:var(--muted);font-size:12px;letter-spacing:.12em;text-transform:uppercase}
+  .brand h1{font-size:20px;line-height:1.2;margin:7px 0 0}
+  nav a{
+    display:block;padding:9px 11px;margin:2px 0;border-radius:9px;
+    color:#555e68;text-decoration:none;font-size:13px;
+  }
+  nav a:hover{background:#eef1f3;color:var(--text)}
+  .nav-group{margin-top:18px}
+  .nav-label{
+    padding:0 11px 6px;color:#9097a0;font-size:10px;
+    text-transform:uppercase;letter-spacing:.13em;font-weight:700;
+  }
+  main{min-width:0}
+  .hero{
+    max-width:1100px;margin:0 auto;padding:70px 44px 42px;
+  }
+  .eyebrow{
+    color:var(--accent);font-size:12px;font-weight:750;
+    letter-spacing:.13em;text-transform:uppercase;
+  }
+  .hero h2{font-size:clamp(32px,5vw,58px);line-height:1.05;margin:12px 0 18px;letter-spacing:-.035em}
+  .hero p{max-width:720px;color:var(--muted);margin:0}
+  .toolbar{
+    max-width:1100px;margin:0 auto;padding:0 44px 28px;
+    display:flex;gap:12px;position:sticky;top:0;z-index:5;
+    background:linear-gradient(var(--bg) 78%,transparent);
+  }
+  #search{
+    flex:1;border:1px solid var(--line);background:var(--surface);
+    padding:12px 15px;border-radius:11px;font-size:14px;outline:none;
+  }
+  #search:focus{border-color:#9bc6ce;box-shadow:0 0 0 3px var(--accent-soft)}
+  .clear{
+    border:1px solid var(--line);background:var(--surface);border-radius:11px;
+    padding:0 15px;cursor:pointer;color:var(--muted)
+  }
+  .content{max-width:1100px;margin:0 auto;padding:0 44px 80px}
+  section.lecture{margin-top:34px;scroll-margin-top:90px}
+  .lecture-head{
+    display:flex;align-items:flex-end;justify-content:space-between;gap:20px;
+    padding-bottom:14px;border-bottom:1px solid var(--line);margin-bottom:22px
+  }
+  .lecture-head h3{margin:0;font-size:28px;letter-spacing:-.02em}
+  .lecture-head span{font-size:12px;color:var(--muted)}
+  .topic{
+    background:var(--surface);border:1px solid var(--line);
+    border-radius:var(--radius);box-shadow:var(--shadow);
+    padding:25px 27px;margin:16px 0;
+  }
+  .topic h4{margin:0 0 15px;font-size:20px;line-height:1.3}
+  .topic h5{margin:22px 0 8px;font-size:14px;color:var(--dark)}
+  .topic p{margin:0 0 8px}
+  .topic ul{margin:8px 0 12px;padding-left:22px}
+  .topic li{margin:4px 0}
+  .keywords{
+    display:flex;flex-wrap:wrap;gap:6px;margin:11px 0 18px;
+    padding-top:9px;border-top:1px dashed #dfe4e7;
+  }
+  .keywords::before{
+    content:"Keywords";font-size:10px;font-weight:800;text-transform:uppercase;
+    letter-spacing:.1em;color:var(--accent);width:100%;margin-bottom:1px;
+  }
+  .tag{
+    background:var(--accent-soft);color:#276d7b;padding:3px 8px;
+    border-radius:999px;font-size:11px;line-height:1.5;
+  }
+  .flow{
+    display:flex;flex-wrap:wrap;align-items:center;gap:8px;
+    margin:12px 0 18px;padding:15px;background:var(--surface-2);
+    border-radius:12px;border:1px solid var(--line)
+  }
+  .flow span{font-weight:700;font-size:13px}
+  .flow b{color:#a0a7ae;font-weight:500}
+  .grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
+  .mini{
+    background:var(--surface-2);border:1px solid var(--line);border-radius:12px;padding:16px
+  }
+  .mini h5{margin:0 0 8px;font-size:14px}
+  .mini p{font-size:13px}
+  .note{
+    border-left:3px solid var(--accent);padding:10px 14px;
+    background:#f7fbfc;border-radius:0 9px 9px 0;margin:12px 0
+  }
+  .note p{margin:0}
+  .source{
+    color:var(--muted);font-size:12px;padding:12px 0 0
+  }
+  .hidden{display:none!important}
+  footer{
+    max-width:1100px;margin:0 auto;padding:25px 44px 60px;
+    color:var(--muted);font-size:12px;border-top:1px solid var(--line)
+  }
+  @media(max-width:850px){
+    .layout{grid-template-columns:1fr}
+    aside{position:relative;height:auto;border-right:0;border-bottom:1px solid var(--line)}
+    nav{display:flex;gap:4px;overflow:auto}.nav-group{display:contents}.nav-label{display:none}
+    nav a{white-space:nowrap}
+    .hero,.toolbar,.content,footer{padding-left:20px;padding-right:20px}
+    .toolbar{position:sticky;top:0}
+    .grid{grid-template-columns:1fr}
+  }
+  @media print{
+    aside,.toolbar{display:none}
+    .layout{display:block}.hero,.content,footer{max-width:none;padding-left:0;padding-right:0}
+    .topic{box-shadow:none;break-inside:avoid}
+  }
+</style>
+</head>
+<body>
+<div class="layout">
+<aside>
+  <div class="brand">
+    <small>DD401</small>
+    <h1>Design Research</h1>
+  </div>
+  <nav>
+    <div class="nav-group">
+      <div class="nav-label">Lectures</div>
+      <a href="#lecture-1">01 · Design Research</a>
+      <a href="#lecture-2">02 · Qualitative Research</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-label">Lecture 1</div>
+      <a href="#what-is-design-research">What is Design Research?</a>
+      <a href="#research-problem">Problem & Question</a>
+      <a href="#question-types">Question Types</a>
+      <a href="#question-quality">Question Characteristics</a>
+      <a href="#pitfalls">Common Pitfalls</a>
+      <a href="#frameworks">PICO · SMART · FINER</a>
+      <a href="#charrette-1">Charrettes</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-label">Lecture 2</div>
+      <a href="#qualitative-why">Why Qualitative?</a>
+      <a href="#ethnography">Ethnography</a>
+      <a href="#interviews">Interviews</a>
+      <a href="#observation">Observation</a>
+      <a href="#shadowing">Shadowing</a>
+      <a href="#diary">Diary Study</a>
+      <a href="#cultural-probe">Cultural Probe</a>
+    </div>
+  </nav>
+</aside>
+
+<main>
+<header class="hero">
+  <div class="eyebrow">Lecture Notes · DD401</div>
+  <h2>Design Research</h2>
+  <p>Lecture literature organized for learning and exam revision. Keywords are placed directly after the relevant paragraphs for quick recall.</p>
+</header>
+
+<div class="toolbar">
+  <input id="search" type="search" placeholder="Search notes or keywords…" aria-label="Search notes">
+  <button class="clear" onclick="document.getElementById('search').value=''; filterNotes()">Clear</button>
+</div>
+
+<div class="content">
+
+<section class="lecture" id="lecture-1">
+  <div class="lecture-head"><h3>Lecture 01 · Design Research</h3><span>23 pages</span></div>
+
+  <article class="topic" id="what-is-design-research">
+    <h4>What is Design Research?</h4>
+    <p>Design research is the process of gathering, analyzing and interpreting data and insights to inspire, guide and provide context for designs. It’s a research discipline that applies both quantitative and qualitative research methods to help make well-informed design decisions.</p>
+    <div class="keywords"><span class="tag">design research</span><span class="tag">data</span><span class="tag">insights</span><span class="tag">quantitative</span><span class="tag">qualitative</span><span class="tag">design decisions</span></div>
+
+    <p>Design research is different from user experience research – focused on the usability of primarily digital products and experiences – design research is a broader discipline that informs the entire design process across various design fields. Beyond focusing solely on researching with users, design research can also explore aesthetics, cultural trends, historical context and more.</p>
+    <div class="keywords"><span class="tag">user experience research</span><span class="tag">usability</span><span class="tag">broader discipline</span><span class="tag">design process</span><span class="tag">aesthetics</span><span class="tag">cultural trends</span><span class="tag">historical context</span></div>
+
+    <div class="note"><p><strong>Source in lecture:</strong> Sanders, Liz. “An Evolving Map of Design Practice and Design Research.” ACM Interactions, vol. XV.6, Dec. 2008. Infographic.</p></div>
+    <div class="keywords"><span class="tag">Sanders</span><span class="tag">design practice</span><span class="tag">design research</span><span class="tag">ACM Interactions</span></div>
+  </article>
+
+  <article class="topic" id="research-problem">
+    <h4>Research Problem & Research Question</h4>
+    <p>A research question is a clear and concise enquiry around which you center a research study. It helps to define the scope of the study and provides a basis for gathering and analysing a variety of data.</p>
+    <div class="keywords"><span class="tag">research question</span><span class="tag">clear</span><span class="tag">concise enquiry</span><span class="tag">scope</span><span class="tag">data</span></div>
+
+    <p>A research problem addresses a specific issue, contradiction, or gap your study seeks to explore. It sets the scope and purpose. It guides direction and offers justification for the research.</p>
+    <div class="keywords"><span class="tag">research problem</span><span class="tag">issue</span><span class="tag">contradiction</span><span class="tag">gap</span><span class="tag">scope</span><span class="tag">purpose</span><span class="tag">direction</span><span class="tag">justification</span></div>
+
+    <p>Defining the research problem in DTU campus environment (physical or digital).</p>
+    <div class="keywords"><span class="tag">DTU campus</span><span class="tag">physical</span><span class="tag">digital</span><span class="tag">research problem</span></div>
+
+    <ul>
+      <li>Identify a gap, a challenge, or an inefficiency</li>
+      <li>Serves as the starting point for your design thinking process</li>
+      <li>Examples: Lack of inclusive wayfinding for visually impaired students; Fragmented communication between admin and students; Lack of awareness & access to mental health resources</li>
+    </ul>
+    <div class="keywords"><span class="tag">gap</span><span class="tag">challenge</span><span class="tag">inefficiency</span><span class="tag">design thinking</span><span class="tag">wayfinding</span><span class="tag">communication</span><span class="tag">resources</span></div>
+
+    <p>Broad Area: e.g., Campus Navigation. Research Problem: Students with disabilities find it difficult to locate departments. Research Question: How can an app enhance spatial accessibility for differently-abled students in DTU campus?</p>
+    <div class="keywords"><span class="tag">broad area</span><span class="tag">campus navigation</span><span class="tag">disabilities</span><span class="tag">spatial accessibility</span><span class="tag">DTU campus</span></div>
+
+    <div class="flow"><span>Topic</span><b>→</b><span>Problem</span><b>→</b><span>Question</span></div>
+    <p>Use this flow to shape your own project ideas into actionable research questions.</p>
+    <div class="keywords"><span class="tag">topic</span><span class="tag">problem</span><span class="tag">question</span><span class="tag">actionable research questions</span></div>
+  </article>
+
+  <article class="topic" id="question-types">
+    <h4>Types of Research Questions</h4>
+
+    <div class="grid">
+      <div class="mini">
+        <h5>Qualitative — as stated in the lecture</h5>
+        <p>These questions involve numerical data, measurement, and often lead to statistical analysis. Main purpose is to measure frequency, correlation, trends, or cause-effect relationships using numerical data.</p>
+        <div class="keywords"><span class="tag">numerical data</span><span class="tag">measurement</span><span class="tag">statistical analysis</span><span class="tag">frequency</span><span class="tag">correlation</span><span class="tag">trends</span><span class="tag">cause-effect</span></div>
+        <p>Q: Does the frequency of bus delays correlate with student tardiness to morning classes?</p>
+        <p>Q: How much time do students spend queuing in the canteen during peak hours?</p>
+      </div>
+      <div class="mini">
+        <h5>Quantitative — as stated in the lecture</h5>
+        <p>These explore experiences, behaviours, perceptions, and motives, usually through interviews, observations, or open-ended surveys. Main purpose is to gain deep understanding, uncover user pain points, and explore emotional or cognitive responses.</p>
+        <div class="keywords"><span class="tag">experiences</span><span class="tag">behaviours</span><span class="tag">perceptions</span><span class="tag">motives</span><span class="tag">interviews</span><span class="tag">observations</span><span class="tag">pain points</span></div>
+        <p>Q: How do first-year students perceive the usability of the university orientation app?</p>
+        <p>Q: What are the expectations of students regarding mental health support through digital tools?</p>
+      </div>
+    </div>
+
+    <div class="mini" style="margin-top:14px">
+      <h5>Mixed Method</h5>
+      <p>These combine both quantitative and qualitative elements to give a richer, more comprehensive understanding. Main purpose is to validate insights with data, while also understanding user perspectives and design implications.</p>
+      <div class="keywords"><span class="tag">mixed method</span><span class="tag">quantitative</span><span class="tag">qualitative</span><span class="tag">validate insights</span><span class="tag">user perspectives</span><span class="tag">design implications</span></div>
+      <ul>
+        <li>What is the impact of a real-time campus bus tracking app on student punctuality (quantitative), and how do students feel about using it (qualitative)?</li>
+        <li>How often do students use the digital noticeboard app (quantitative), and what improvements do they suggest for better communication (qualitative)?</li>
+        <li>What are the most used features of the campus food ordering app (quantitative), and how do users describe its convenience (qualitative)?</li>
+      </ul>
+    </div>
+
+    <h5>Types shown in the lecture diagram</h5>
+    <div class="grid">
+      <div class="mini"><h5>Descriptive Questions</h5><p>Aim to describe characteristics or behaviors of a group or phenomenon.</p><div class="keywords"><span class="tag">describe</span><span class="tag">characteristics</span><span class="tag">behaviors</span></div></div>
+      <div class="mini"><h5>Comparative Questions</h5><p>Compare two or more groups or variables to identify differences or similarities.</p><div class="keywords"><span class="tag">compare</span><span class="tag">groups</span><span class="tag">variables</span><span class="tag">differences</span><span class="tag">similarities</span></div></div>
+      <div class="mini"><h5>Relational Questions</h5><p>Explore the relationship or correlation between two or more variables.</p><div class="keywords"><span class="tag">relationship</span><span class="tag">correlation</span><span class="tag">variables</span></div></div>
+      <div class="mini"><h5>Experimental Questions</h5><p>Test cause-and-effect relationships by manipulating variables.</p><div class="keywords"><span class="tag">cause-effect</span><span class="tag">manipulation</span><span class="tag">variables</span></div></div>
+      <div class="mini"><h5>Causal Questions</h5><p>Aim to determine if one variable causes changes in another.</p><div class="keywords"><span class="tag">causal</span><span class="tag">variable</span><span class="tag">changes</span></div></div>
+    </div>
+  </article>
+
+  <article class="topic" id="question-quality">
+    <h4>Characteristics of Research Questions</h4>
+    <p>The lecture diagram identifies research questions as limited to a single problem, answerable using data collection, resolvable within the time limit and other restrictions, comprehensive enough to provide detailed results, relevant and realistic, and reflective of the chosen field of study.</p>
+    <div class="keywords"><span class="tag">single problem</span><span class="tag">data collection</span><span class="tag">time limit</span><span class="tag">detailed results</span><span class="tag">relevant</span><span class="tag">realistic</span><span class="tag">field of study</span></div>
+  </article>
+
+  <article class="topic" id="pitfalls">
+    <h4>Common Pitfalls when Writing Research Questions</h4>
+    <ul>
+      <li>Too broad or vague OR Too narrow or trivial</li>
+      <li>Leading (assumes an outcome).</li>
+    </ul>
+    <div class="keywords"><span class="tag">too broad</span><span class="tag">vague</span><span class="tag">too narrow</span><span class="tag">trivial</span><span class="tag">leading</span><span class="tag">assumes outcome</span></div>
+
+    <p><strong>Weak Question:</strong> How social media affects students?</p>
+    <p><strong>Stronger Question:</strong> How does daily Instagram use influence design inspiration among B.Des. students in Delhi</p>
+    <div class="keywords"><span class="tag">weak question</span><span class="tag">stronger question</span><span class="tag">social media</span><span class="tag">design inspiration</span><span class="tag">B.Des. students</span><span class="tag">Delhi</span></div>
+  </article>
+
+  <article class="topic" id="frameworks">
+    <h4>PICO · SMART · FINER</h4>
+
+    <div class="grid">
+      <div class="mini">
+        <h5>PICO</h5>
+        <p><strong>Population:</strong> Who are the relevant patients? Age, sex, location, characteristics etc.</p>
+        <div class="keywords"><span class="tag">Population</span><span class="tag">age</span><span class="tag">location</span><span class="tag">characteristics</span></div>
+        <p><strong>Intervention:</strong> What is the treatment, therapy, or exposure being investigated?</p>
+        <div class="keywords"><span class="tag">Intervention</span><span class="tag">treatment</span><span class="tag">therapy</span><span class="tag">exposure</span></div>
+        <p><strong>Comparison:</strong> How does the intervention compare to other treatments?</p>
+        <div class="keywords"><span class="tag">Comparison</span><span class="tag">other treatments</span></div>
+        <p><strong>Outcome:</strong> What specific outcomes are you hoping to accomplish?</p>
+        <div class="keywords"><span class="tag">Outcome</span><span class="tag">specific outcomes</span></div>
+      </div>
+
+      <div class="mini">
+        <h5>SMART</h5>
+        <p><strong>Specific:</strong> What do you want to accomplish?</p>
+        <div class="keywords"><span class="tag">Specific</span><span class="tag">accomplish</span></div>
+        <p><strong>Measurable:</strong> How will I know when it’s accomplished?</p>
+        <div class="keywords"><span class="tag">Measurable</span><span class="tag">measure</span></div>
+        <p><strong>Achievable:</strong> What actions must you take to complete it?</p>
+        <div class="keywords"><span class="tag">Achievable</span><span class="tag">actions</span></div>
+        <p><strong>Relevant:</strong> Why is achieving it important?</p>
+        <div class="keywords"><span class="tag">Relevant</span><span class="tag">importance</span></div>
+        <p><strong>Time-bound:</strong> When will you reach your goal?</p>
+        <div class="keywords"><span class="tag">Time-bound</span><span class="tag">deadline</span><span class="tag">goal</span></div>
+      </div>
+
+      <div class="mini">
+        <h5>FINER</h5>
+        <p><strong>Feasible:</strong> Can it facilitate the collection of quantifiable data and evidence?</p>
+        <div class="keywords"><span class="tag">Feasible</span><span class="tag">data</span><span class="tag">evidence</span></div>
+        <p><strong>Interesting:</strong> Is the research question compelling for a broader audience?</p>
+        <div class="keywords"><span class="tag">Interesting</span><span class="tag">broader audience</span></div>
+        <p><strong>Novel:</strong> Does it introduce original insights and knowledge to the field?</p>
+        <div class="keywords"><span class="tag">Novel</span><span class="tag">original insights</span><span class="tag">knowledge</span></div>
+        <p><strong>Ethical:</strong> Does the study ensure participants’ safety, consent, and data privacy?</p>
+        <div class="keywords"><span class="tag">Ethical</span><span class="tag">safety</span><span class="tag">consent</span><span class="tag">data privacy</span></div>
+        <p><strong>Relevant:</strong> Does it tackle current issues or guide future research?</p>
+        <div class="keywords"><span class="tag">Relevant</span><span class="tag">current issues</span><span class="tag">future research</span></div>
+      </div>
+    </div>
+
+    <div class="note"><p><strong>Lecture do / don't diagram:</strong> Do create clear and specific questions; contribute new insights to the field; make questions researchable; and have multiple answers. Don’t make questions answerable with a simple yes or no; avoid questions that are overly broad; don’t use jargon or overly complex language; and don’t ignore ethics like participant privacy.</p></div>
+    <div class="keywords"><span class="tag">clear</span><span class="tag">specific</span><span class="tag">researchable</span><span class="tag">multiple answers</span><span class="tag">yes/no</span><span class="tag">broad</span><span class="tag">jargon</span><span class="tag">ethics</span><span class="tag">privacy</span></div>
+  </article>
+
+  <article class="topic" id="charrette-1">
+    <h4>Design Research Charrette 1</h4>
+    <p>Frame Your Research Problem & Question & Design a tentative methodology for answering it.</p>
+    <div class="keywords"><span class="tag">charrette</span><span class="tag">research problem</span><span class="tag">research question</span><span class="tag">tentative methodology</span></div>
+
+    <h4>Design Research Charrette 2</h4>
+    <p>Go and Observe the user behaviour on site at three different times today.</p>
+    <div class="keywords"><span class="tag">observation</span><span class="tag">user behaviour</span><span class="tag">site</span><span class="tag">three different times</span></div>
+  </article>
+</section>
+
+<section class="lecture" id="lecture-2">
+  <div class="lecture-head"><h3>Lecture 02 · Qualitative Research</h3><span>32 pages</span></div>
+
+  <article class="topic" id="qualitative-why">
+    <h4>Qualitative Methods in Design Research</h4>
+    <p>The lecture lists the following qualitative methods in design research: Ethnography; Observation – Covert & Overt; Interviews – Open & Closed; Shadowing; Cultural Probes & Diary Studies.</p>
+    <div class="keywords"><span class="tag">ethnography</span><span class="tag">observation</span><span class="tag">covert</span><span class="tag">overt</span><span class="tag">interviews</span><span class="tag">open</span><span class="tag">closed</span><span class="tag">shadowing</span><span class="tag">cultural probes</span><span class="tag">diary studies</span></div>
+
+    <p>Qualitative methods capture user experiences, emotions, and motivations. They help understand “why” and “how”, including reasons and processes behind user actions, and provide rich, in-depth narratives that quantitative methods cannot capture.</p>
+    <div class="keywords"><span class="tag">user experiences</span><span class="tag">emotions</span><span class="tag">motivations</span><span class="tag">why</span><span class="tag">how</span><span class="tag">user actions</span><span class="tag">rich narratives</span></div>
+
+    <p>Example: Why students prefer studying in cafes vs. libraries.</p>
+    <div class="keywords"><span class="tag">example</span><span class="tag">student preferences</span><span class="tag">cafes</span><span class="tag">libraries</span></div>
+  </article>
+
+  <article class="topic" id="ethnography">
+    <h4>Ethnography</h4>
+    <p>Imagine a coffeehouse chain planning to expand its reach in a new city. Ethnographic research involves sending researchers to local neighbourhoods to immerse themselves in the coffee-drinking culture. They observe where residents go for coffee, how they socialize in coffee shops, and what flavours or rituals are popular. Armed with these insights, the chain can tailor its menu, ambience, and marketing strategies to resonate with local preferences and culture, ensuring a successful launch in the new market.</p>
+    <div class="keywords"><span class="tag">ethnography</span><span class="tag">immersion</span><span class="tag">coffee culture</span><span class="tag">socializing</span><span class="tag">rituals</span><span class="tag">local preferences</span></div>
+
+    <p>Ethnographic research is a qualitative method where researchers observe and/or interact with a study’s participants in their real-life environment. This type of research is popular in various fields like anthropology, sociology, and market research, among others, to understand cultures, behaviors, and social dynamics.</p>
+    <div class="keywords"><span class="tag">qualitative method</span><span class="tag">real-life environment</span><span class="tag">anthropology</span><span class="tag">sociology</span><span class="tag">market research</span><span class="tag">cultures</span><span class="tag">behaviors</span><span class="tag">social dynamics</span></div>
+
+    <p>Ethnographic research allows designers to understand their users' habits, mental models and behaviors deeply. For instance, a UX designer working on a travel booking platform might use ethnographic research to investigate how travelers plan and book their trips.</p>
+    <div class="keywords"><span class="tag">habits</span><span class="tag">mental models</span><span class="tag">behaviors</span><span class="tag">UX design</span><span class="tag">travel booking</span></div>
+
+    <h5>Ethnographic methods shown in the lecture</h5>
+    <p>The lecture diagram identifies participant observation, in-depth interviews, cultural context, field notes, triangulation, and reflexivity as ethnographic methods or considerations. It also emphasizes an immersive approach: “Live like the user.”</p>
+    <div class="keywords"><span class="tag">participant observation</span><span class="tag">in-depth interviews</span><span class="tag">cultural context</span><span class="tag">field notes</span><span class="tag">triangulation</span><span class="tag">reflexivity</span><span class="tag">immersive approach</span></div>
+
+    <h5>Ethical Considerations in Ethnographic Research</h5>
+    <p>One fundamental consideration in ethnographic research is privacy. Researchers must take steps to protect the privacy of their subjects.</p>
+    <div class="keywords"><span class="tag">privacy</span><span class="tag">ethics</span><span class="tag">participants</span></div>
+
+    <p>Obtain permission before taking photographs or recording conversations. Be careful not to reveal personal information about subjects that could lead to their identification.</p>
+    <div class="keywords"><span class="tag">permission</span><span class="tag">photographs</span><span class="tag">recording</span><span class="tag">personal information</span><span class="tag">identification</span></div>
+
+    <p>It’s also important to obtain informed consent from subjects before conducting any study activities. This means that people understand the study's purpose, what will be involved, and any potential risks or benefits. Ensure that any study does not cause harm or distress to subjects, either physically or emotionally. This may involve avoiding sensitive topics or situations that could trigger trauma.</p>
+    <div class="keywords"><span class="tag">informed consent</span><span class="tag">study purpose</span><span class="tag">risks</span><span class="tag">benefits</span><span class="tag">harm</span><span class="tag">distress</span><span class="tag">sensitive topics</span></div>
+  </article>
+
+  <article class="topic" id="interviews">
+    <h4>Interviews</h4>
+    <h5>Closed Questions</h5>
+    <p>Closed questions (or closed-ended questions) restrict participants to one of a limited set of possible answers. Closed questions have a short and limited response.</p>
+    <div class="keywords"><span class="tag">closed questions</span><span class="tag">limited answers</span><span class="tag">short response</span></div>
+
+    <p>Examples of closed questions: What’s your job title? Have you used the website before? Approximately, how many times have you used the website? When was the last time you used the website?</p>
+    <div class="keywords"><span class="tag">job title</span><span class="tag">website use</span><span class="tag">frequency</span><span class="tag">last use</span></div>
+
+    <p>Closed questions provide a short, clarifying response, while open-ended questions result in the user describing an experience.</p>
+    <div class="keywords"><span class="tag">clarifying response</span><span class="tag">open-ended</span><span class="tag">experience</span></div>
+
+    <h5>Open Ended Questions</h5>
+    <p>Open-ended questions allow participants to give a free-form text answer. Open-ended questions encourage exploration of a topic; a participant can choose what to share and in how much detail. Participants are encouraged to give a reasoned response rather than a one-word answer or a short phrase.</p>
+    <div class="keywords"><span class="tag">open-ended</span><span class="tag">free-form</span><span class="tag">exploration</span><span class="tag">detail</span><span class="tag">reasoned response</span></div>
+
+    <p>Examples of open-ended questions include: Walk me through a typical day. Tell me about the last time you used the website. What are you thinking? How did you feel about using the website to do this task?</p>
+    <div class="keywords"><span class="tag">typical day</span><span class="tag">experience</span><span class="tag">thoughts</span><span class="tag">feelings</span></div>
+
+    <h5>Structured Interview</h5>
+    <p>Questions are predetermined and set in a particular order. Typically, the questions will be closed-ended and will offer multiple choices. Since the questions are asked in a set order, it is easy for the researcher to compare responses and determine the patterns. Structured interviews help to mitigate biases and offer higher levels of validity and reliability.</p>
+    <div class="keywords"><span class="tag">structured</span><span class="tag">predetermined</span><span class="tag">set order</span><span class="tag">closed-ended</span><span class="tag">compare responses</span><span class="tag">patterns</span><span class="tag">bias</span><span class="tag">validity</span><span class="tag">reliability</span></div>
+
+    <p>This type of interview is used when you understand the subject thoroughly and can design excellent questions; you don’t have sufficient time and resources to carry out the research; or your research question depends on a strong parity between the respondents.</p>
+    <div class="keywords"><span class="tag">subject knowledge</span><span class="tag">time</span><span class="tag">resources</span><span class="tag">parity</span><span class="tag">respondents</span></div>
+
+    <h5>Semi-Structured Interview</h5>
+    <p>Semi-structured interviews have elements of both structured and unstructured interviews. With these interviews, the researcher will have an idea of the questions to ask, but the phrasing and order of the questions will not be set. Since they are often open-ended, the researcher will enjoy high levels of flexibility, and they will still be able to compare the responses fairly easily.</p>
+    <div class="keywords"><span class="tag">semi-structured</span><span class="tag">structured</span><span class="tag">unstructured</span><span class="tag">flexibility</span><span class="tag">open-ended</span><span class="tag">compare responses</span></div>
+
+    <p>These types of interviews are ideal when the researcher has a lot of experience in interviews or the research question is exploratory in nature.</p>
+    <div class="keywords"><span class="tag">experience</span><span class="tag">exploratory</span><span class="tag">research question</span></div>
+
+    <h5>Unstructured Interview</h5>
+    <p>Also known as non-directive interviewing, and they don’t have a set pattern. Also, questions are not arranged in advance. These interviews are used as exploratory research tools and are commonly used in social sciences and humanities.</p>
+    <div class="keywords"><span class="tag">unstructured</span><span class="tag">non-directive</span><span class="tag">no set pattern</span><span class="tag">exploratory</span><span class="tag">social sciences</span><span class="tag">humanities</span></div>
+
+    <p>An unstructured interview is a good fit if the research question is completely exploratory in nature or if the research requires you to form a connection with your respondents.</p>
+    <div class="keywords"><span class="tag">exploratory</span><span class="tag">connection</span><span class="tag">respondents</span></div>
+
+    <h5>Focus Group</h5>
+    <p>With focus group interviews, the researcher will present the questions to a group instead of an individual. These types of interviews don’t just study the responses of the interviewees; they also study the group dynamic and body language. Focus groups give us an opportunity to capture the human element – the emotions and non-verbal cues that numbers often miss – and help us to explore underlying motivations.</p>
+    <div class="keywords"><span class="tag">focus group</span><span class="tag">group</span><span class="tag">group dynamics</span><span class="tag">body language</span><span class="tag">emotions</span><span class="tag">non-verbal cues</span><span class="tag">motivations</span></div>
+
+    <p>Focus group interviews can be suitable if the study depends on group discussion dynamics, if the questions are complex and can’t be answered with multiple choices, or if the study is open to uncovering new ideas and questions.</p>
+    <div class="keywords"><span class="tag">discussion dynamics</span><span class="tag">complex questions</span><span class="tag">new ideas</span><span class="tag">new questions</span></div>
+
+    <h5>Interview comparison shown in the lecture</h5>
+    <p>Structured interviews are less susceptible to interviewer bias, offer high levels of credibility and validity, and are simple to use, but can make interviewees uncomfortable, are not flexible, and have limited scope because they are closed-ended. Unstructured interviews are highly flexible, respondents are more open as it is a casual conversation, have lower risk of bias, and offer more details and nuance, but can be hard to generalize, can be hard for the interviewer to keep opinions or feelings in check, and may risk low internal validity.</p>
+    <div class="keywords"><span class="tag">structured</span><span class="tag">bias</span><span class="tag">credibility</span><span class="tag">validity</span><span class="tag">flexibility</span><span class="tag">generalization</span><span class="tag">nuance</span></div>
+
+    <p>Semi-structured interviews limit distraction during the interview, combine the benefits of structured and unstructured interviews, and offer high levels of detail. The lecture also notes flexibility, potential validity concerns, a high risk of bias, and the need to come up with good questions for these interviews.</p>
+    <div class="keywords"><span class="tag">semi-structured</span><span class="tag">detail</span><span class="tag">flexibility</span><span class="tag">validity</span><span class="tag">bias</span><span class="tag">good questions</span></div>
+
+    <p>Focus groups are highly effective, interviewees will be more open, can be done on a low budget, and make it easy to discuss a variety of topics. The lecture notes possible disadvantages including the interviewer not being able to ask too many questions, requiring excellent leadership and social skills, risk of social desirability bias, and inability to guarantee confidentiality.</p>
+    <div class="keywords"><span class="tag">focus group</span><span class="tag">effective</span><span class="tag">low budget</span><span class="tag">social desirability bias</span><span class="tag">confidentiality</span></div>
+  </article>
+
+  <article class="topic" id="observation">
+    <h4>Observation</h4>
+    <p>The lecture presents observation through two distinctions: covert versus overt observation, and participant versus non-participant observation.</p>
+    <div class="keywords"><span class="tag">observation</span><span class="tag">covert</span><span class="tag">overt</span><span class="tag">participant</span><span class="tag">non-participant</span></div>
+
+    <p><strong>Overt observation</strong> means the observed group is aware of the presence of the researcher and that their behavior is being observed.</p>
+    <div class="keywords"><span class="tag">overt</span><span class="tag">aware</span><span class="tag">researcher</span><span class="tag">observed behavior</span></div>
+
+    <p><strong>Covert observation</strong> means the participants are not aware of the presence of the researcher and that their behavior is being observed.</p>
+    <div class="keywords"><span class="tag">covert</span><span class="tag">not aware</span><span class="tag">researcher</span><span class="tag">observed behavior</span></div>
+
+    <p><strong>Participant observation:</strong> the observer becomes actively involved in the activities of the people being studied.</p>
+    <div class="keywords"><span class="tag">participant</span><span class="tag">active involvement</span><span class="tag">activities</span></div>
+
+    <p><strong>Non-participant observation:</strong> the researcher observes from a distance.</p>
+    <div class="keywords"><span class="tag">non-participant</span><span class="tag">distance</span><span class="tag">researcher</span></div>
+
+    <p>The lecture comparison notes that overt observation has no ethical issues but behaviour may not be natural/normal; covert observation has high ecological validity but ethical issues; participant observation can make behaviour easier to understand and has high ecological validity but is hard to record retrospectively and can affect objectivity; non-participant observation records observations as they happen and allows the observer to maintain objectivity, but behaviour may be recorded without knowing the meaning behind it.</p>
+    <div class="keywords"><span class="tag">ethical issues</span><span class="tag">ecological validity</span><span class="tag">natural behaviour</span><span class="tag">objectivity</span><span class="tag">retrospective recording</span><span class="tag">meaning</span></div>
+  </article>
+
+  <article class="topic" id="shadowing">
+    <h4>Shadowing</h4>
+    <p>Shadowing in UX research is a method of observing users as they perform their regular tasks or activities, in order to gain insight into their behaviors, needs, and pain points. The researcher, just like a private investigator, follows the user closely, either in person or remotely, and takes notes on their actions.</p>
+    <div class="keywords"><span class="tag">shadowing</span><span class="tag">regular tasks</span><span class="tag">behaviors</span><span class="tag">needs</span><span class="tag">pain points</span><span class="tag">in person</span><span class="tag">remotely</span></div>
+
+    <p>Although the process of user shadowing includes asking questions, it is different from in-depth interviews and field (or ethnographic) research: observation must be prioritized, and questions only support it.</p>
+    <div class="keywords"><span class="tag">observation</span><span class="tag">questions</span><span class="tag">in-depth interviews</span><span class="tag">ethnographic research</span></div>
+
+    <h5>Hawthorne Effect</h5>
+    <p>The Hawthorne effect is a phenomenon when people modify their behavior because they know they are being observed, which typically results in the performance improvement.</p>
+    <div class="keywords"><span class="tag">Hawthorne effect</span><span class="tag">observed</span><span class="tag">behavior modification</span><span class="tag">performance improvement</span></div>
+  </article>
+
+  <article class="topic" id="diary">
+    <h4>Diary Study</h4>
+    <p>Diary study—is a longitudinal (running over a period of time) UX research method used to collect qualitative data, through participants keeping a diary to record their thoughts, feelings, and behavior, while they use a product.</p>
+    <div class="keywords"><span class="tag">diary study</span><span class="tag">longitudinal</span><span class="tag">qualitative data</span><span class="tag">thoughts</span><span class="tag">feelings</span><span class="tag">behavior</span></div>
+
+    <p>A diary study entails participants self-reporting data over an extended period of time—ranging from days to a month or longer. During this time, they’ll log specific information about activities regarding the product being studied.</p>
+    <div class="keywords"><span class="tag">self-reporting</span><span class="tag">extended period</span><span class="tag">days</span><span class="tag">month or longer</span><span class="tag">activities</span><span class="tag">product</span></div>
+
+    <p>The lecture timeline illustrates planning and preparation, a pre-study brief, a reporting period, payment milestones, a post-study interview, and data analysis.</p>
+    <div class="keywords"><span class="tag">planning</span><span class="tag">pre-study brief</span><span class="tag">reporting period</span><span class="tag">payment milestone</span><span class="tag">post-study interview</span><span class="tag">data analysis</span></div>
+  </article>
+
+  <article class="topic" id="cultural-probe">
+    <h4>Cultural Probe</h4>
+    <p>Cultural probes are an approach to qualitative user research where face-to-face research is impractical or inappropriate. They consist of prompts, questions and instructions along with artifacts for recording thoughts and feelings. The artifacts may be as simple as a diary or as elaborate as a single-use camera.</p>
+    <div class="keywords"><span class="tag">cultural probes</span><span class="tag">qualitative research</span><span class="tag">face-to-face</span><span class="tag">prompts</span><span class="tag">questions</span><span class="tag">instructions</span><span class="tag">artifacts</span><span class="tag">thoughts</span><span class="tag">feelings</span></div>
+
+    <p>Cultural probes are specifically casual and informal, yet thoughtful in their aesthetic craft, message, and delivery, created to inspire delight and respect, response and return. The materials created for probe kits should be varied and imaginative, designed to elicit responses that are relevant to the particular design inquiry.</p>
+    <div class="keywords"><span class="tag">casual</span><span class="tag">informal</span><span class="tag">aesthetic craft</span><span class="tag">delight</span><span class="tag">respect</span><span class="tag">varied</span><span class="tag">imaginative</span><span class="tag">design inquiry</span></div>
+
+    <h5>Research Design Charrette</h5>
+    <p>Which Qualitative Methods are most suitable for your chosen project. Make a detailed Research Design.</p>
+    <div class="keywords"><span class="tag">qualitative methods</span><span class="tag">chosen project</span><span class="tag">research design</span></div>
+  </article>
+</section>
+
+</div>
+
+<footer>
+  <div><strong>Source material:</strong> Design research Lecture 1.pdf · Qualitative Research Lecture 2.pdf</div>
+  <div class="source">The notes and examples above are based on the uploaded lecture material. Keywords are added for recall; no outside academic content has been introduced.</div>
+</footer>
+</main>
+</div>
+
+<script>
+function filterNotes(){
+  const q = document.getElementById('search').value.trim().toLowerCase();
+  document.querySelectorAll('.topic').forEach(topic=>{
+    const match = !q || topic.innerText.toLowerCase().includes(q);
+    topic.classList.toggle('hidden', !match);
+  });
+  document.querySelectorAll('.lecture').forEach(lecture=>{
+    const visible = [...lecture.querySelectorAll('.topic')].some(x=>!x.classList.contains('hidden'));
+    lecture.classList.toggle('hidden', !visible);
+  });
+}
+document.getElementById('search').addEventListener('input', filterNotes);
+</script>
+</body>
+</html>
